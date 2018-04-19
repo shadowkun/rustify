@@ -67,9 +67,48 @@ With [rustup](https://www.rust-lang.org/install.html) installed:
 ```sh
 $ rustup update nightly
 $ rustup target add wasm32-unknown-unknown --toolchain nightly
-$ rustc +nightly --target wasm32-unknown-unknown "$target" --crate-type=cdylib
 $ cargo install --git https://github.com/alexcrichton/wasm-gc
 ```
+## Using in command line "$target" is ur rust sourcecode file "*.rs"
+```sh
+$ rustc +nightly --target wasm32-unknown-unknown "$target" --crate-type=cdylib
+```
+## recommend
+> WebAssembly is not yet integrated with <script type='module'> or ES6 import statements, thus there is not a path to have the browser fetch modules for you using imports.
+
+> The older WebAssembly.compile/WebAssembly.instantiate methods require you to create an ArrayBuffer containing your WebAssembly module binary after fetching the raw bytes, and then compile/instantiate it. This is analogous to new Function(string), except that we are substituting a string of characters (JavaScript source code) with an array buffer of bytes (WebAssembly source code).
+
+> The newer WebAssembly.compileStreaming/WebAssembly.instantiateStreaming methods are a lot more efficient — they perform their actions directly on the raw stream of bytes coming from the network, cutting out the need for the ArrayBuffer step.
+
+> So how do we get those bytes into an array buffer and compiled? The following sections explain.
+
+fetch:
+```javascript
+fetch('module.wasm').then(response =>
+  response.arrayBuffer()
+).then(bytes =>
+  WebAssembly.instantiate(bytes, importObject)
+).then(results => {
+  // Do something with the compiled results!
+});
+```
+
+xmlHttpRequest:
+``` javascript
+request = new XMLHttpRequest();
+request.open('GET', 'simple.wasm');
+request.responseType = 'arraybuffer';
+request.send();
+
+request.onload = function() {
+  var bytes = request.response;
+  WebAssembly.instantiate(bytes, importObject).then(results => {
+    results.instance.exports.exported_func();
+  });
+};
+```
+
+## Using in Front-end
 ```sh
 $ npm install rustify
 ```
