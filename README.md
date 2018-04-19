@@ -73,7 +73,7 @@ $ cargo install --git https://github.com/alexcrichton/wasm-gc
 ```sh
 $ rustc +nightly --target wasm32-unknown-unknown "$target" --crate-type=cdylib
 ```
-## recommend
+## Recommend :https://developer.mozilla.org/en-US/docs/WebAssembly/Loading_and_running
 > WebAssembly is not yet integrated with <script type='module'> or ES6 import statements, thus there is not a path to have the browser fetch modules for you using imports.
 
 > The older WebAssembly.compile/WebAssembly.instantiate methods require you to create an ArrayBuffer containing your WebAssembly module binary after fetching the raw bytes, and then compile/instantiate it. This is analogous to new Function(string), except that we are substituting a string of characters (JavaScript source code) with an array buffer of bytes (WebAssembly source code).
